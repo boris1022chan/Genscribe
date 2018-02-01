@@ -1,6 +1,7 @@
-from flask import Flask, jsonify
+import os.path
+from flask import Flask, Response, jsonify
 from flask import request
-import urllib
+import urllib.request
 import random
 
 application = Flask(__name__)
@@ -12,29 +13,22 @@ audio_file = None
 
 @application.route('/', methods=['GET'])
 def welcome():
-    return jsonify({'links': links})
+    content = open('./src/index.html').read()
+    return Response(content, mimetype="text/html")
 
 
-@application.route('/insert', methods=['GET', 'POST'])
+@application.route('/insert', methods=['POST'])
 def create_task():
 
     header = request.headers
     if header['Content-Type'] == 'application/json':
         name = 'file'+str(random.randint(1, 1001))
         url = request.json['link']
-        audio_file = urllib.urlretrieve(url, name)
+        audio_file = urllib.request.urlretrieve(url, name)
         return jsonify({'name': name})
 
     elif header['Content-Type'].startswith('audio'):
-        print("")
-
-    # print("CONTENT TYPE: " + header['Content-Type'])
-    # link = {
-    #     'link': request.json['link']
-    #
-    # }
-    # links.append(link)
-    # return jsonify({'link': link}), 201
+        audio_file = request.json['file']
 
 
 if __name__ == '__main__':
