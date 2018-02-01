@@ -1,7 +1,6 @@
-import sys
 from flask import Flask, jsonify
 from flask import request
-import json
+
 
 app = Flask(__name__)
 
@@ -20,17 +19,24 @@ tasks = [
     }
 ]
 
+links = []
 
 @app.route('/', methods=['GET'])
 def welcome():
-    return jsonify({'tasks': tasks})
+    return jsonify({'links': links})
 
 
-@app.route('/login', methods=['POST'])
-def login():
+@app.route('/insert', methods=['POST'])
+def create_task():
+
     header = request.headers
-    body = request.data
-    return
+    print("CONTENT TYPE: " + header['Content-Type'])
+    link = {
+        'link': request.json['link']
+
+    }
+    links.append(link)
+    return jsonify({'link': link}), 201
 
 
 if __name__ == '__main__':
