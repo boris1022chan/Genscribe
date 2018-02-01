@@ -35,8 +35,9 @@ class TranscriptAnalyzer:
 		
 		url = 'https://stream.watsonplatform.net/speech-to-text/api/v1/recognize'
 		auth = ('914c12e3-abe4-4763-95a9-0fd97120d043', 'YSM7q8n6cXiC')
-		headers = {'Content-Type': 'audio/' + type}
-		files = {'data-binary': open(path, 'rb')}
+		headers = {'Content-Type': type}
+		# files = {'data-binary': open(path, 'rb')}
+		files = {'data-binary': path}
 		params = {
 			#'speaker_labels': 'true',
 			'smart_formatting': 'true'
@@ -46,7 +47,10 @@ class TranscriptAnalyzer:
 
 		self.sentence_blocks = ""
 		self.i = 0
-		for result in res.json()['results']:
+		print("hello")
+		print(res.text)
+		json_data = res.json()
+		for result in json_data['results']:
 			self.sentence_blocks += " " + result['alternatives'][0]['transcript']
 			self.i = self.i + 1
 		self.schedule_words = [" by ", " due ", "plan", "setup", "schedule", "complete by", "complete on", "next", " on ", " in "]
@@ -118,10 +122,10 @@ class TranscriptAnalyzer:
 		return calendar_items
 
 
-
-thing = TranscriptAnalyzer('test.mp3', 'mp3')
-print (thing.frequently_discussed_topics())
-print (thing.retrieve_calendar_items())
+#
+# thing = TranscriptAnalyzer('test.mp3', 'mp3')
+# print (thing.frequently_discussed_topics())
+# print (thing.retrieve_calendar_items())
 #{
 #  "url": "https://stream.watsonplatform.net/speech-to-text/api",
 #  "username": "914c12e3-abe4-4763-95a9-0fd97120d043",
