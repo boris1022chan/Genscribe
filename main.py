@@ -47,8 +47,6 @@ class TranscriptAnalyzer:
 
 		self.sentence_blocks = ""
 		self.i = 0
-		print("hello")
-		print(res.text)
 		json_data = res.json()
 		for result in json_data['results']:
 			self.sentence_blocks += " " + result['alternatives'][0]['transcript']

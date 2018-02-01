@@ -1,7 +1,7 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Response
 from flask import request as req
 import main
-import urllib
+import urllib.request
 import urllib3
 import random
 
@@ -23,10 +23,14 @@ def create_task():
 
     header = req.headers
     if header['Content-Type'] == 'application/json':
-        name = 'file'+str(random.randint(1, 1001))
+        randomNum = random.randint(1, 1001)
+        name = 'file'+str(randomNum)+'.mp3'
         url = req.json['link']
-        audio_file = urllib.urlretrieve(url, name)
-        return jsonify({'name': name})
+        audio_file = urllib.request.urlretrieve(url, name)
+        audioOpen = open(name, 'rb')
+        process = main.TranscriptAnalyzer(audioOpen, 'audio/mp3')
+        return str(process.frequently_discussed_topics())
+        # return jsonify({'name': name})
 
     elif header['Content-Type'].startswith('audio'):
         process = main.TranscriptAnalyzer(req.data, header['Content-Type'])
