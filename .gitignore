@@ -1,3 +1,4 @@
-# Ignore .idea/ and __pycache__
+# Ignore .idea/, __pycache__, and venv
 .idea/*
 __pycache__/*
+venv/*
