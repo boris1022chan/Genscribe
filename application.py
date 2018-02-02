@@ -2,7 +2,6 @@ from flask import Flask, jsonify, Response, abort
 from flask import request as req
 import main
 import urllib.request
-import urllib3
 import random
 
 application = Flask(__name__)
