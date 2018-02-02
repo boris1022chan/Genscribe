@@ -26,10 +26,9 @@ def create_task():
     header = req.headers
     if header['Content-Type'] == 'application/json':
         name = 'file'+str(random.randint(1, 1001))
-        return jsonify(req.data)
-        # json_thing = json.loads(req.form['data'])
-        # url = json_thing['link']
+        url = req.get_json()['link']
         # audio_file = urllib.request.urlretrieve(url, name)
+        return jsonify({'url': url})
         # return jsonify({'name': name})
 
     elif header['Content-Type'].startswith('audio'):
