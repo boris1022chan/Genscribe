@@ -28,6 +28,13 @@
             flex-direction: column;
             justify-content: center;
         }
+        #ask-input {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+        }
         #type-input {
             width: 250px;
             height: 25px;
@@ -61,6 +68,9 @@
             background-color: #5fa862;
             outline: none;
         }
+        #show-data {
+            display:none;
+        }
     </style>
 
 </head>
@@ -72,17 +82,25 @@
         />
     </div>
     <div class="content">
-        <h1 style=" margin: 0; font-size: 55px;"> Welcome to Genscribe</h1>
-        <h3 style=" margin-top: 5px; margin-bottom: 40px;"> The best audio analyser for your meeting</h3>
-        <form style="display: flex" onsubmit="myFunction()">
-            <div class="user-input">
-                <input id="type-input" type="text" value="Audio Url Link" autocomplete="off"/>
-                <input id="file-input" type="file" value="Audio File"/>
+        <div id="ask-input">
+            <h1 style=" margin: 0; font-size: 55px;"> Welcome to Genscribe</h1>
+            <h3 style=" margin-top: 5px; margin-bottom: 40px;"> The best audio analyser for your meeting</h3>
+            <form style="display: flex" onsubmit="myFunction(); return false;">
+                <div class="user-input">
+                    <input id="type-input" type="text" value="Audio Url Link" autocomplete="off"/>
+                    <input id="file-input" type="file" value="Audio File"/>
+                </div>
+                <div class="submit-container">
+                    <input id="submit" type="submit" value="Submit" />
+                </div>
+            </form>
+        </div>
+        <div id="show-data">
+            <H4>List of Topic:</H4>
+            <div id="topic-list">
             </div>
-            <div class="submit-container">
-                <input id="submit" type="submit" value="Submit" />
-            </div>
-        </form>
+            <button onclick="tryAgain()">Try Another</button>
+        </div>
     </div>
 
     <script>
@@ -96,12 +114,25 @@
                 data: JSON.stringify({link: inputLink}),
                 headers: {"Content-Type": "application/json"},
                 success: function(a,b,c) {
-                    console.log('success');
+                    displayData(a);
                 },
                 error: function(a,b,c) {
-                    console.log('fail');
+                    alert('Fail to analyze audio. Please input a valid format');
                 },
             });
+        }
+
+        function displayData(data) {
+            data = data.slice(1,-1).replace(/'/g, "").split(",");
+            list = '<ul>';
+            data.forEach(function(element) {
+                list += '<li>' + element + '</li>';
+            });
+            list += '</ul>';
+            document.getElementById('topic-list').innerHTML = list;
+
+            $('#ask-input').hide();
+            $('#show-data').show();
         }
 
         $("#type-input").focus(function() {
@@ -113,6 +144,12 @@
                 $("#type-input").val("Audio Url Link");
            }
         })
+
+        function tryAgain() {
+            $('#ask-input').show();
+            $('#show-data').hide();
+            $("#type-input").val("Audio Url Link");
+        }
     </script>
 </body>
 </html>

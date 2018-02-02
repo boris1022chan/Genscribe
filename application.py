@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify, Response, abort
 from flask import request as req
 import main
 import urllib.request
@@ -29,12 +29,19 @@ def create_task():
         audio_file = urllib.request.urlretrieve(url, name)
         audioOpen = open(name, 'rb')
         process = main.TranscriptAnalyzer(audioOpen, 'audio/mp3')
-        return str(process.frequently_discussed_topics())
+        return str(process.frequently_discussed_topics()), 200
         # return jsonify({'name': name})
 
     elif header['Content-Type'].startswith('audio'):
         process = main.TranscriptAnalyzer(req.data, header['Content-Type'])
-        return str(process.frequently_discussed_topics())
+        return str(process.frequently_discussed_topics()), 200
+
+    abort(400)
+
+
+@application.errorhandler(400)
+def page_not_found(error):
+    return str("fail to analyze audio"), 400
 
 
 if __name__ == '__main__':
