@@ -1,12 +1,14 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Response
 from flask import request as req
+from flask_cors import CORS
 import main
-import urllib
-import urllib3
+import urllib.request
+# import urllib3
 import random
 
 application = Flask(__name__)
 application.debug=True
+CORS(application)
 
 links = []
 audio_file = None
@@ -24,9 +26,11 @@ def create_task():
     header = req.headers
     if header['Content-Type'] == 'application/json':
         name = 'file'+str(random.randint(1, 1001))
-        url = req.json['link']
-        audio_file = urllib.urlretrieve(url, name)
-        return jsonify({'name': name})
+        return jsonify(req.data)
+        # json_thing = json.loads(req.form['data'])
+        # url = json_thing['link']
+        # audio_file = urllib.request.urlretrieve(url, name)
+        # return jsonify({'name': name})
 
     elif header['Content-Type'].startswith('audio'):
         process = main.TranscriptAnalyzer(req.data, header['Content-Type'])

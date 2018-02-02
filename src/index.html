@@ -87,21 +87,32 @@
 
     <script>
         function myFunction() {
-            var url = window.location.href.slice(0,-1) + "insert";
+            var url = "http://127.0.0.1:5000/insert";
             var link = $("#type-input").val();
             <!--//var audioContent =  JSON.parse({ "link": link});-->
-            debugger;
             console.log("URL: " + url);
+            // $.ajaxSetup({
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Accept': 'application/json',
+            //         'Access-Control-Allow-Origin': '*'
+            //     }
+            // });
+            // $.post(url, {"link": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"}, function(a, b, c) {
+            //     alert("HI");
+            // }, "json");
             $.ajax({
                 url: url,
-                type: 'post',
-                data: {link: link},
-                headers: {"Content-Type": "application/json"},
-                success: function(a,b,c) {
-                    alert('success');
+                method: "POST",
+                crossDomain: true,
+                headers: {"Content-Type":"application/json"},
+                dataType: 'json',
+                data: JSON.stringify({link: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'}),
+                success: function(data) {
+                    alert(JSON.stringify(data));
                 },
-                error: function(a,b,c) {
-                    alert('fail');
+                error: function(data) {
+                    console.log(JSON.stringify(data)); 
                 },
             });
         }
