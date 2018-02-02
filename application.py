@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, Response, abort
+from flask import Flask, jsonify, Response, abort, url_for
 from flask import request as req
 import main
 import urllib.request
@@ -14,15 +14,19 @@ audio_file = None
 
 @application.route('/', methods=['GET'])
 def welcome():
-    content = open('./src/index.html').read()
-    return Response(content, mimetype="text/html")
+    # content = open('./src/index.html').read()
+    # return Response(content, mimetype="text/html")
+    url_for('static', filename='requirements.txt')
+    # url_for('static', filename='english.pickle')
+    return main._output()
 
-
-@application.route('/insert', methods=['POST'])
+@application.route('/insert', methods=['POST', 'GET'])
 def create_task():
-
+    # myObj = main.myClass()
+    # return myObj._out()
     header = req.headers
     if header['Content-Type'] == 'application/json':
+        return ("link")
         randomNum = random.randint(1, 1001)
         name = 'file'+str(randomNum)+'.mp3'
         url = req.json['link']
