@@ -4,8 +4,12 @@ from watson_developer_cloud.natural_language_understanding_v1 import Features, E
     ConceptsOptions, CategoriesOptions
 
 import nltk
-nltk.data.path.append("/static/nltk_data/tokenizers/punkt")
-nltk.data.path.append("/static")
+# import nltk.tokenize.punkt
+nltk.data.path.append("/usr/local/share/nltk_data/nltk_data")
+nltk.data.path.append("../usr/local/share/nltk_data")
+nltk.data.path.append("/usr/local/share/nltk_data/tokenizers/punkt/py3")
+nltk.data.path.append("../usr/local/share/nltk_data/tokenizers/punkt/py3")
+
 from nltk import sent_tokenize
 import parsedatetime
 from datetime import datetime

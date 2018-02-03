@@ -4,19 +4,21 @@ import main
 import urllib.request
 import urllib3
 import random
+import os
 
 application = Flask(__name__)
 application.debug=True
 
 links = []
-audio_file = None
+extensions = ['.mp3', '.wav', '.flac']
+
 
 
 @application.route('/', methods=['GET'])
 def welcome():
     # content = open('./src/index.html').read()
     # return Response(content, mimetype="text/html")
-    url_for('static', filename='requirements.txt')
+    # url_for('static', filename='requirements.txt')
     # url_for('static', filename='english.pickle')
     return main._output()
 
@@ -26,13 +28,23 @@ def create_task():
     # return myObj._out()
     header = req.headers
     if header['Content-Type'] == 'application/json':
-        return ("link")
+        # return ("link")
         randomNum = random.randint(1, 1001)
-        name = 'file'+str(randomNum)+'.mp3'
         url = req.json['link']
-        audio_file = urllib.request.urlretrieve(url, name)
-        audioOpen = open(name, 'rb')
-        process = main.TranscriptAnalyzer(audioOpen, 'audio/mp3')
+        audio_type = os.path.splitext(url)[1].lower()
+        valid_file = False
+        for item in extensions:
+            if audio_type == item:
+                valid_file = True
+                break
+        if not valid_file:
+            return "please enter a url with valid audio file."
+        # name = 'file' + str(randomNum) + '.mp3'
+        # audio_file = urllib.request.urlretrieve(url, name)
+        # audioOpen = open(name, 'rb')
+        audio_type = 'audio/' + audio_type.split(".")[-1]
+        audio_file = urllib.request.urlopen(url)
+        process = main.TranscriptAnalyzer(audio_file, audio_type)
         return str(process.frequently_discussed_topics()), 200
         # return jsonify({'name': name})
 
