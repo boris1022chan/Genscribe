@@ -47,9 +47,10 @@ class App extends Component {
       // TODO: Tell user to give a valid input
       return;
     }
+    var url = "http://localhost:3001/api/";
     if (this.state.link) {
       // TODO: Added validation logic for link
-      var url = "http://localhost:3001/api/audioLink";
+      url += "audioLink";
       fetch({
         url: url,
         type: 'POST',
@@ -66,11 +67,11 @@ class App extends Component {
     }
     if (this.state.file) {
       // TODO: Added validation logic for audio file
-      var url = "http://localhost:3001/api/audioFile";
+      url += "audioFile";
       fetch({
         url: url,
         type: 'POST',
-        data: JSON.stringify(),
+        data: this.state.file,
         headers: { "Content-Type": "application/json" },
         success: function (a, b, c) {
           console.log("Successfully sent POST req");
@@ -90,15 +91,17 @@ class App extends Component {
 
   updateFile = (e) => {
     const file = e.target.files[0];
+    var fileContent = "";
     const reader = new FileReader();
     
     reader.onload = (e) => {
       console.log("Loading file...");
+      fileContent = e.currentTarget.result;
     }
     reader.onloadend = () => {
       console.log("Finished loading!");
       this.setState({
-        file: file
+        file: fileContent
       })
     }
     reader.readAsBinaryString(file);
