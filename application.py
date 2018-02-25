@@ -15,11 +15,8 @@ extensions = ['.mp3', '.wav', '.flac']
 
 @application.route('/', methods=['GET'])
 def welcome():
-    # content = open('./src/index.html').read()
-    # return Response(content, mimetype="text/html")
-    # url_for('static', filename='requirements.txt')
-    # url_for('static', filename='english.pickle')
-    return main._output()
+    content = open('./src/index.html').read()
+    return Response(content, mimetype="text/html")
 
 @application.route('/insert', methods=['POST', 'GET'])
 def create_task():
@@ -31,6 +28,7 @@ def create_task():
         randomNum = random.randint(1, 1001)
         url = req.json['link']
         audio_type = os.path.splitext(url)[1].lower()
+        print(audio_type)
         valid_file = False
         for item in extensions:
             if audio_type == item:
@@ -45,7 +43,6 @@ def create_task():
         audio_file = urllib.request.urlopen(url)
         process = main.TranscriptAnalyzer(audio_file, audio_type)
         return str(process.frequently_discussed_topics()), 200
-        # return jsonify({'name': name})
 
     elif header['Content-Type'].startswith('audio'):
         process = main.TranscriptAnalyzer(req.data, header['Content-Type'])

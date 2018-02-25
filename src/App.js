@@ -7,13 +7,12 @@ class App extends Component {
   constructor() {
     super();
     this.state = {};
-    this.startRecording = this.startRecording.bind(this);
-    this.stopRecording = this.stopRecording.bind(this);
-    this.sendAudioFile = this.sendAudioFile.bind(this);
+    this.link = "";
+    this.file = {};
   }
 
   startRecording = () => {
-    fetch('http://localhost:3002/api/speech-to-text/token')
+    fetch('http://localhost:3001/api/speech-to-text/token')
       .then(function (response) {
         return response.text();
       }).then((token) => {
@@ -43,21 +42,66 @@ class App extends Component {
     this.stream.stop();
   }
 
-  sendAudioFile = () => {
-    var url = window.location.protocol + "//" + window.location.host + "/insert";
-    console.log("URL: " + url);
-    fetch({
-      url: url,
-      type: 'POST',
-      data: JSON.stringify({ link: "https://s3.amazonaws.com/jzxhuang.com/test.mp3" }),
-      headers: { "Content-Type": "application/json" },
-      success: function (a, b, c) {
-        console.log("Successfully sent POST req");
-      },
-      error: function (a, b, c) {
-        alert('Fail to analyze audio. Please input a valid format');
-      },
-    });
+  handleSubmit = () => {
+    if (!(this.state.link || !this.state.file)) {
+      // TODO: Tell user to give a valid input
+      return;
+    }
+    if (this.state.link) {
+      // TODO: Added validation logic for link
+      var url = "http://localhost:3001/api/audioLink";
+      fetch({
+        url: url,
+        type: 'POST',
+        data: JSON.stringify({ link: this.state.link }),
+        headers: { "Content-Type": "application/json" },
+        success: function (a, b, c) {
+          console.log("Successfully sent POST req");
+        },
+        error: function (a, b, c) {
+          alert('Fail to analyze audio. Please input a valid format');
+        },
+      });
+      return;
+    }
+    if (this.state.file) {
+      // TODO: Added validation logic for audio file
+      var url = "http://localhost:3001/api/audioFile";
+      fetch({
+        url: url,
+        type: 'POST',
+        data: JSON.stringify(),
+        headers: { "Content-Type": "application/json" },
+        success: function (a, b, c) {
+          console.log("Successfully sent POST req");
+        },
+        error: function (a, b, c) {
+          alert('Fail to analyze audio. Please input a valid format');
+        },
+      });
+    }
+  }
+
+  updateLink = (e) => {
+    this.setState({
+      link: e.target.value
+    })
+  }
+
+  updateFile = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      console.log("Loading file...");
+    }
+    reader.onloadend = () => {
+      console.log("Finished loading!");
+      this.setState({
+        file: file
+      })
+    }
+    reader.readAsBinaryString(file);
   }
 
   render() {
@@ -67,22 +111,27 @@ class App extends Component {
           <img src={logo} alt="genscribe logo" className="logo" />
           <h1 className="App-title">Welcome to Genscribe</h1>
         </header>
-        <div className="content">
+        <div className="form-wrapper">
           <div>
             <h3> The best audio analyser for your meeting </h3>
-            <form onSubmit={this.sendAudioFile}>
+            <form onSubmit={this.handleSubmit}>
               <div className="userInput">
-                <input id="typeInput" type="text" placeholder="https://s3.amazonaws.com/jzxhuang.com/test.mp3" autoComplete="off" />
-                <input id="fileInput" type="file" />
+                <input id="typeInput" type="text"
+                  placeholder="https://s3.amazonaws.com/jzxhuang.com/test.mp3"
+                  autoComplete="off"
+                  onChange={this.updateLink} />
+                <input id="fileInput" type="file" onChange={this.updateFile} />
               </div>
               <div className="submit-container">
-                <input id="submit" type="submit" value="Submit" />
+                <button id="submit" onClick={this.handleSubmit}>Submit</button>
               </div>
             </form>
-
-            <button onClick={this.startRecording}>Start Recording</button>
-            <div style={{ fontSize: '40px' }}>{this.state.text}</div>
           </div>
+          <br />
+          <br />
+          <br />
+          <button onClick={this.startRecording}>Start Recording</button>
+          <div style={{ fontSize: '40px' }}>{this.state.text}</div>
           <button onClick={this.stopRecording}>Stop Recording</button>
         </div>
       </div>

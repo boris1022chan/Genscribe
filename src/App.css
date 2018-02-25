@@ -27,7 +27,7 @@ body {
   margin-left: 5px;
 }
 
-.content {
+.form-wrapper {
   display: flex;
   align-items: center;
   height: 100%;

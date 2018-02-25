@@ -28,9 +28,6 @@ class myClass:
     def __init__(self):
         return
 
-    def _out(self):
-        return "my class output 3.5"
-
 
 def _output():
     return "Hello World"
@@ -67,7 +64,7 @@ class TranscriptAnalyzer:
         self.schedule_words = [" by ", " due ", "plan", "setup", "schedule", "complete by", "complete on", "next",
                                " on ", " in "]
         self.prohibited_schedule_words = ["today"]
-        self.tokenized_transcript = sent_tokenize(self.sentence_blocks);
+        self.tokenized_transcript = sent_tokenize(self.sentence_blocks)
         parser = PlaintextParser.from_string(self.sentence_blocks, Tokenizer(LANGUAGE))
         stemmer = Stemmer(LANGUAGE)
 
