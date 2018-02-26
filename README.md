@@ -37,7 +37,7 @@ o Construct a summary of the meeting
 
 #### What we build:
 
-· Python based, can be web-app
+· Python based web app (migrated to nodejs)
 
 · Want to incorporate machine learning. Either in language processing (difficult), or trying to give speakers a role based on what they are talking about (seems unnecessary since you can pull info from Outlook)
 
@@ -48,33 +48,16 @@ If this needs to be more Genesys related, it can be used to summarize a call, th
 
 ### How to run
 
-Assuming python 3.6 or higher has been installed, we need to build a virtual dev environment using `virtualenv`. We can install `virtualenv` through `pip`:
-
+To run the server from local environment, cd to /services folder from the root of the project. Enter the following line in the terminal to run the server:
 ```bash
-$ pip install virtualenv
+$ npm install
+$ node server.js
 ```
 
-Then cd to root of the project and create a virtual environment:
 
+To run the Genscribe project, cd to /frontend folder from the root of the project. Enter the following line in the terminal to run the server:
 ```bash
-$ virtualenv venv
+$ npm install
+$ node start
 ```
-
-We need to activate virtual environment before installing any dependencies:
-
-```bash
-$ source venv/bin/activate
-```
-*Note: if using Git Bash on Windows, the command could look like ```$ source venv/Scripts/activate```, it does the same thing.
-
-Installing all the dependencies in `requirements.txt`:
-```bash
-$ pip install -r requirements.txt
-```
-
-Run the web app with this command:
-```bash
-$ python application.py
-```
-
-And we can access it by browsing `localhost:5000/`
+And access it by browsing `localhost:3000/`
