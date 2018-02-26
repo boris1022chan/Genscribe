@@ -58,6 +58,6 @@ $ node server.js
 To run the Genscribe project, cd to /frontend folder from the root of the project. Enter the following line in the terminal to run the server:
 ```bash
 $ npm install
-$ node start
+$ npm start
 ```
 And access it by browsing `localhost:3000/`
