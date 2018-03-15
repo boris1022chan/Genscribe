@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.png';
 import './App.css';
-import recognizeMic from 'watson-speech/speech-to-text/recognize-microphone';
+import recognizeMic from 'watson-speech/speech-to-text/genscribe-recognize-microphone';
 
 class App extends Component {
   constructor() {
@@ -9,40 +9,35 @@ class App extends Component {
     this.state = {};
     this.link = "";
     this.file = {};
+    this.stream;
   }
 
   startRecording = () => {
-    fetch('http://localhost:3001/api/speech-to-text/token')
-      .then(function (response) {
-        return response.text();
-      }).then((token) => {
-        console.log(token);
-        this.stream = recognizeMic({
-          token: token,
-          objectMode: true, // send objects instead of text
-          extractResults: true, // convert {results: [{alternatives:[...]}], result_index: 0} to {alternatives: [...], index: 0}
-          format: false // optional - performs basic formatting on the results such as capitals an periods
-        });
-        this.stream.on('data', (data) => {
-          // Send to backend for processing
-          this.setState({
-            text: data.alternatives[0].transcript
-          })
-        });
-        this.stream.on('error', function (err) {
-          console.log(err);
-        });
-        this.stream.stop.bind(this.stream);
-      }).catch(function (error) {
-        console.log(error);
-      });
+    this.stream = recognizeMic({
+      token: "insert a valid token",
+      objectMode: true, // send objects instead of text
+      extractResults: true, // convert {results: [{alternatives:[...]}], result_index: 0} to {alternatives: [...], index: 0}
+      format: false // optional - performs basic formatting on the results such as capitals an periods
+    });
+    this.stream.on('data', (data) => {
+      // Send to backend for processing
+      this.setState({
+        text: data.test
+      })
+    });
+    this.stream.on('error', function (err) {
+      console.log(err);
+    });
+    this.stream.stop.bind(this.stream);
   }
+
 
   stopRecording = () => {
     this.stream.stop();
   }
 
-  handleSubmit = () => {
+  handleSubmit = (e) => {
+    e.preventDefault();
     if (!(this.state.link || !this.state.file)) {
       // TODO: Tell user to give a valid input
       return;
@@ -93,7 +88,7 @@ class App extends Component {
     const file = e.target.files[0];
     var fileContent = "";
     const reader = new FileReader();
-    
+
     reader.onload = (e) => {
       console.log("Loading file...");
       fileContent = e.currentTarget.result;
